@@ -1,0 +1,42 @@
+#lang sicp
+;#lang racket/base
+;(require racket/trace)
+(define (cube x) (* x x x))
+(define (sum term a next b)
+  (if (> a b)
+      0
+      (+ (term a)
+         (sum term (next a) next b))))
+(define (integral f a b dx)
+  (define (add-dx x) (+ x dx))
+  (* (sum f (+ a (/ dx 2)) add-dx b)
+     dx))
+
+(define (integral-simpson f a b n)
+  (define calc-h
+    (/ (- b a) n))
+  (define (next-n x)
+    (+ x calc-h))
+  (define (next-2n x)
+    (+ x ( * 2 calc-h)))
+  (* (+ (sum f a next-n b)
+        (sum f (next-2n a) next-2n (- b (* 2 calc-h)))
+        (* 3 (sum f (next-n a) next-2n (- b calc-h))))
+     (/ calc-h 3)))
+
+ (define (simpson-integral-2 f a b n) 
+   (define h (/ (- b a) n)) 
+   (define (yk k) (f (+ a (* h k)))) 
+   (define (simpson-term k) 
+     (* (cond ((or (= k 0) (= k n)) 1) 
+              ((odd? k) 4) 
+              (else 2)) 
+        (yk k))) 
+   (* (/ h 3) (sum simpson-term 0 inc n)))
+
+(integral cube 0 1 0.01)
+(integral cube 0 1 0.001)
+(integral-simpson cube 0 1.0 100)
+(integral-simpson cube 0 1.0 1000)
+(simpson-integral-2 cube 0 1.0 100)
+(simpson-integral-2 cube 0 1.0 1000)
