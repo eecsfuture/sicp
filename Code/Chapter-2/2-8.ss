@@ -1,0 +1,21 @@
+#lang sicp
+;#lang racket/base
+;(require racket/trace)
+(define (make-intercal a b) (cons a b))
+
+(define (upper-bound interval)
+  (max (car interval) (cdr interval)))
+
+(define (lower-bound interval)
+  (min (cdr interval) (cdr interval)))
+
+(define (add-interval x y)
+  (make-interval (+ (lower-bound x) (lower-bound y))
+                 (+ (upper-bound x) (upper-bound y))))
+
+(define (sub-interval x y)
+  (add-intercal
+    x
+    (make-intercal (- (upper-bound y))
+                   (- (lower-bound y)))))
+
