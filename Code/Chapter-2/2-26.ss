@@ -7,7 +7,7 @@
 (append x y)
 ; => (1 2 3 4 5 6)
 ; because we're just building the list.
-; look at the code of append, it's the definition of list
+; look at the code of append, it's just the definition of list
 ; (cons (car list1) (append (cdr list1) list2))
 
 (cons x y)
