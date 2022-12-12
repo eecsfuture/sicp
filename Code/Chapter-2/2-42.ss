@@ -42,19 +42,37 @@
 
 ; (x y) represent row x, col y, has a queen
 ; col 1 in the right, col k in the left
+; (define (adjoin-position new-row k rest-of-queens)
+;   (if (null? rest-of-queens)
+;       (list (list new-row k))
+;       (cons (list new-row k) rest-of-queens)))
 (define (adjoin-position new-row k rest-of-queens)
-  (if (null? rest-of-queens)
-      (list (list new-row k))
-      (cons (list new-row k) rest-of-queens)))
+  (cons (list new-row k) rest-of-queens))
+
 ; test
 ; (adjoin-position 1 2 empty-board) ;((1 2))
 ; (adjoin-position 3 4 (adjoin-position 1 2 empty-board)) ;((3 4) (1 2))
 
+; this solution forget to check the diagonal
+; (define (safe? k positions)
+;   (let ((k-row (caar positions)))
+;        (accumulate
+;           (lambda (next rest) (and (not (= k-row (car next))) rest))
+;           true
+;           (cdr positions))))
+
+; add check for the diagonal
 (define (safe? k positions)
-  (let ((k-row (caar positions)))
+  (let ((k-row (caar positions))
+        (k-col k))
        (accumulate
-          (lambda (next rest) (and (not (= k-row (car next))) rest))
+          (lambda (next rest) 
+            (and (not (= k-row (car next))) ;checks row, do not need to check col
+                 (not (= (abs (- k-row (car next))) (abs (- k-col (cadr next)))));checks diag 
+                 rest))
           true
           (cdr positions))))
 
-(queens 3)
+(queens 4)
+; (length (queens 8)) ; 92
+; (length (queens 11)) ; 2680 
